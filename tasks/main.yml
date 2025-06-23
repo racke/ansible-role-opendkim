@@ -1,0 +1,40 @@
+---
+- name: Install opendkim
+  ansible.builtin.package:
+    name:
+      - opendkim
+      - opendkim-tools
+
+- name: Create directories for the keys
+  ansible.builtin.file:
+    state: directory
+    path: "{{ opendkim_keys_directory }}/{{ item.name }}"
+    owner: "{{ opendkim_unix_user }}"
+    group: "{{ opendkim_unix_user }}"
+    mode: '700'
+  loop: "{{ opendkim_domains }}"
+
+- name: Determine whether keys exist
+  ansible.builtin.stat:
+    path: "{{ opendkim_keys_directory }}/{{ item.name }}/{{ item.selector }}.private"
+  register: opendkim_keys_stats
+  loop: "{{ opendkim_domains }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- set_fact:
+    opendkim_keys_exists: "{{ opendkim_keys_exists | default([]) + [item.stat.exists] }}"
+  loop: "{{ opendkim_keys_stats.results }}"
+
+- name: Generate keys
+  ansible.builtin.command:
+    cmd: |
+      opendkim-genkey -D {{ opendkim_keys_directory }}/{{ item.name }} -d {{ item.name }} -s {{ item.selector }}
+  become: true
+  become_user: "{{ opendkim_unix_user }}"
+  vars:
+    ansible_ssh_pipelining: true
+  when: not opendkim_keys_exists[opendkim_domains_loop_idx]
+  loop: "{{ opendkim_domains }}"
+  loop_control:
+    index_var: opendkim_domains_loop_idx

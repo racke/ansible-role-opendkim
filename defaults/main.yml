@@ -1,0 +1,4 @@
+---
+opendkim_unix_user: opendkim
+opendkim_keys_directory: "/etc/dkimkeys"
+opendkim_domains: []
