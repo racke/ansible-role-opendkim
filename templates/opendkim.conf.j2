@@ -19,10 +19,12 @@ OversignHeaders		From
 # for domain "example.com" with selector "2020" (2020._domainkey.example.com),
 # using the private key stored in /etc/dkimkeys/example.private. More granular
 # setup options can be found in /usr/share/doc/opendkim/README.opendkim.
-#Domain			example.com
-#Selector		2020
-#KeyFile		/etc/dkimkeys/example.private
+{% for domain in opendkim_domains %}
+Domain			{{ domain.name }}
+Selector		{{ domain.selector }}
+KeyFile		{{ opendkim_keys_directory }}/{{ domain.name }}/{{ domain.selector }}.private
 
+{% endfor %}
 # In Debian, opendkim runs as user "opendkim". A umask of 007 is required when
 # using a local socket with MTAs that access the socket as a non-privileged
 # user (for example, Postfix). You may need to add user "postfix" to group
