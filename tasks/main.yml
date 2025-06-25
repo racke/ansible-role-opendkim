@@ -38,3 +38,9 @@
   loop: "{{ opendkim_domains }}"
   loop_control:
     index_var: opendkim_domains_loop_idx
+
+- name: Configure opendkim
+  ansible.builtin.template:
+    src: opendkim.conf.j2
+    dest: /etc/opendkim.conf
+  notify: restart opendkim
