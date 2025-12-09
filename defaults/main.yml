@@ -3,3 +3,6 @@ opendkim_unix_user: opendkim
 opendkim_keys_directory: "/etc/dkimkeys"
 opendkim_domains: []
 opendkim_socket: "local:/run/opendkim/opendkim.sock"
+
+# Trust
+opendkim_nameservers: 127.0.0.1
