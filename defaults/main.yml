@@ -4,6 +4,11 @@ opendkim_keys_directory: "/etc/dkimkeys"
 opendkim_domains: []
 opendkim_socket: "inet:8891@127.0.0.1"
 
+# Logging
+opendkim_syslog: 'yes'
+opendkim_syslog_success: 'yes'
+opendkim_log_why: 'no'
+
 # Trust
 opendkim_nameservers: 127.0.0.1
 opendkim_internal_hosts:
