@@ -6,3 +6,5 @@ opendkim_socket: "inet:8891@127.0.0.1"
 
 # Trust
 opendkim_nameservers: 127.0.0.1
+opendkim_internal_hosts:
+  - 127.0.0.1
