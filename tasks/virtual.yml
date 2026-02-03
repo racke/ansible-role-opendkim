@@ -16,3 +16,12 @@
     group: "{{ opendkim_unix_user }}"
     mode: '0644'
   notify: restart opendkim
+
+- name: Configure trustedhosts
+  ansible.builtin.template:
+    src: trustedhosts.j2
+    dest: "{{ opendkim_keys_directory }}/trustedhosts"
+    owner: "{{ opendkim_unix_user }}"
+    group: "{{ opendkim_unix_user }}"
+    mode: '0644'
+  notify: restart opendkim
