@@ -1,0 +1,18 @@
+---
+- name: Configure keytable
+  ansible.builtin.template:
+    src: keytable.conf.j2
+    dest: "{{ opendkim_keys_directory }}/keytable"
+    owner: "{{ opendkim_unix_user }}"
+    group: "{{ opendkim_unix_user }}"
+    mode: '0644'
+  notify: restart opendkim
+
+- name: Configure signingtable
+  ansible.builtin.template:
+    src: signing.j2
+    dest: "{{ opendkim_keys_directory }}/signingtable"
+    owner: "{{ opendkim_unix_user }}"
+    group: "{{ opendkim_unix_user }}"
+    mode: '0644'
+  notify: restart opendkim

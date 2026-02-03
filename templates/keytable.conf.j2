@@ -1,0 +1,3 @@
+{% for domain in opendkim_domains %}
+{{ domain.selector }}._domainkey.{{ domain.name }} {{ domain.name }}:{{ domain.selector }}:{{ opendkim_keys_directory }}/{{ domain.name }}/{{ domain.selector }}.private
+{% endfor %}

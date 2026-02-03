@@ -19,12 +19,18 @@ OversignHeaders		From
 # for domain "example.com" with selector "2020" (2020._domainkey.example.com),
 # using the private key stored in /etc/dkimkeys/example.private. More granular
 # setup options can be found in /usr/share/doc/opendkim/README.opendkim.
+{% if opendkim_domains | count == 1 %}
 {% for domain in opendkim_domains %}
 Domain			{{ domain.name }}
 Selector		{{ domain.selector }}
 KeyFile		{{ opendkim_keys_directory }}/{{ domain.name }}/{{ domain.selector }}.private
 
 {% endfor %}
+{% else %}
+KeyTable                file:{{ opendkim_keys_directory }}/keytable
+SigningTable            refile:{{ opendkim_keys_directory }}/signingtable
+
+{% endif %}
 # In Debian, opendkim runs as user "opendkim". A umask of 007 is required when
 # using a local socket with MTAs that access the socket as a non-privileged
 # user (for example, Postfix). You may need to add user "postfix" to group
@@ -45,7 +51,7 @@ PidFile			/run/opendkim/opendkim.pid
 
 # Hosts for which to sign rather than verify, default is 127.0.0.1. See the
 # OPERATION section of opendkim(8) for more information.
-InternalHosts		{{ opendkim_internal_hosts | join(', ') }}
+InternalHosts          {{ opendkim_internal_hosts | join(', ') }}
 
 # The trust anchor enables DNSSEC. In Debian, the trust anchor file is provided
 # by the package dns-root-data.
